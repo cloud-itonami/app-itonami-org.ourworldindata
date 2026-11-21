@@ -11,4 +11,18 @@
    :unit "TWh"
    :latest-observation-year 2024
    :url "https://ourworldindata.org/grapher/electricity-prod-source-stacked.csv"
-   :license-note "OWID charts are CC BY; underlying third-party source terms remain applicable."}]}
+   :license-note "OWID charts are CC BY; underlying third-party source terms remain applicable."}
+  {:source/id :owid/grapher-electricity-prod-source-stacked-2026-11-21
+   :title "Electricity production by source"
+   :path "raw/grapher/2026-11-21/electricity-prod-source-stacked.csv"
+   :metadata-path "raw/grapher/2026-11-21/electricity-prod-source-stacked.metadata.json"
+   :diff-path "raw/grapher/2026-11-21/DIFF.edn"
+   :csv-sha256 "3c1b33823486dfcb8f661ec3f64bb64a741ff460620f0efbb55545ed34fea97f"
+   :metadata-sha256 "6bb23e9c7f62457f04fe2e579858a3fa5ad3a24ccbd09c6eb5f2acc4df958407"
+   :unit "TWh"
+   :latest-observation-year 2025
+   :url "https://ourworldindata.org/grapher/electricity-mix.csv?frequency=annual&metric=by_source&source=total"
+   :redirected-from "https://ourworldindata.org/grapher/electricity-prod-source-stacked.csv"
+   :license-note "OWID charts are CC BY; underlying third-party source terms remain applicable."
+   :retrieved-at "2026-11-21T02:37:15Z"
+   :bytes 544028}]}

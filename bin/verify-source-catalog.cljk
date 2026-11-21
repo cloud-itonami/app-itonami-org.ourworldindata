@@ -1,0 +1,79 @@
+#!/usr/bin/env nbb
+;; Verifies raw/source-catalog.edn against the files under raw/.
+;; Reads files only, no network. Exits 0 when every catalogued path exists
+;; with a matching sha256 and every file under raw/ is named by the catalog.
+;; Exits non-zero naming the cause otherwise.
+(ns verify-source-catalog
+  (:require ["fs" :as fs]
+            ["crypto" :as crypto]
+            ["path" :as path]
+            [clojure.edn :as edn]
+            [clojure.string :as str]))
+
+(def catalog-path "raw/source-catalog.edn")
+(def raw-dir "raw")
+
+(defn fail! [msg]
+  (binding [*out* *err*]
+    (println (str "verify-source-catalog FAILED: " msg)))
+  (js/process.exit 1))
+
+(defn sha256-file [p]
+  (.digest (.update (crypto/createHash "sha256") (fs/readFileSync p)) "hex"))
+
+(defn list-files [dir prefix]
+  (mapcat (fn [e]
+            (let [n (.-name e)
+                  full (path/join dir n)
+                  rel (str prefix n)]
+              (if (.isDirectory e)
+                (list-files full (str rel "/"))
+                [rel])))
+          (array-seq (fs/readdirSync dir #js {:withFileTypes true}))))
+
+;; The catalog is the manifest, not a catalogued source artifact,
+;; so it is exempt from the every-file-under-raw-is-named rule.
+(def self-exempt #{catalog-path})
+
+(defn check-hash [source-id p expected]
+  (when (nil? expected)
+    (fail! (str source-id " " p " has no expected sha256 in catalog")))
+  (when-not (fs/existsSync p)
+    (fail! (str "missing file: " p " (source " source-id ")")))
+  (let [actual (sha256-file p)]
+    (when-not (= actual expected)
+      (fail! (str "sha256 mismatch: " p " (source " source-id
+                   ") expected " expected " actual " actual ")")))))
+
+(defn -main []
+  (when-not (fs/existsSync catalog-path)
+    (fail! (str "missing catalog: " catalog-path)))
+  (let [catalog (try (edn/read-string (fs/readFileSync catalog-path "utf8"))
+                     (catch :default e
+                       (fail! (str "cannot parse " catalog-path ": " (.-message e)))))
+        sources (:sources catalog)]
+    (when (empty? sources)
+      (fail! "catalog has no :sources entries"))
+    (let [named (atom #{})]
+      (doseq [s sources]
+        (let [id (or (:source/id s) "?")]
+          (doseq [k [:path :metadata-path :diff-path]]
+            (when-let [p (get s k)]
+              (swap! named conj p)
+              (when-not (fs/existsSync p)
+                (fail! (str "missing file: " p " (source " id ")")))))
+          (when (:path s)
+            (check-hash id (:path s) (:csv-sha256 s)))
+          (when (:metadata-path s)
+            (check-hash id (:metadata-path s) (:metadata-sha256 s)))))
+      (let [on-disk (set (remove self-exempt (list-files raw-dir "raw/")))
+            unlisted (sort (remove @named on-disk))]
+        (when (seq unlisted)
+          (fail! (str "file(s) under raw/ not named by catalog: "
+                       (str/join ", " unlisted))))
+          (println (str "verify-source-catalog OK: "
+                        (count sources) " source(s), "
+                        (count @named) " catalogued file(s), "
+                        (count on-disk) " file(s) under raw/"))))))
+
+(-main)
