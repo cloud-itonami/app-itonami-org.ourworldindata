@@ -1,0 +1,33 @@
+;; storage/cid-manifest.edn — Yataverse content identifiers for the committed files under raw/.
+;;
+;; Each :cid is a CIDv1 with codec raw (0x55) and multihash sha2-256, rendered in multibase base32
+;; lower-case without padding (prefix "b"): the bytes 0x01 0x55 0x12 0x20 followed by the sha256 of
+;; the file. Receipts for the writes of 2026-11-21 are in storage/yataverse-receipts/.
+{:manifest/version 1
+ :cid {:version 1 :codec "raw" :codec-code 85 :multihash "sha2-256" :multibase "base32-lower-no-padding"}
+ :files
+ [
+  {:path "raw/grapher/2026-11-21/DIFF.edn"
+   :bytes 6435
+   :sha256 "df0650594519f39ae40003a8dfdea227d551af385a6d3b50ccf7fca64b2827fa"
+   :cid "bafkreig7azifsriz6onoiaadvdp55irh2vi26oc2nu5vbthx7stewkbh7i"}
+  {:path "raw/grapher/2026-11-21/electricity-prod-source-stacked.csv"
+   :bytes 544028
+   :sha256 "3c1b33823486dfcb8f661ec3f64bb64a741ff460620f0efbb55545ed34fea97f"
+   :cid "bafkreib4dmzyeneg37fy6zq6yp3exnskoqp7iydcb4hpxnkvixwtj7vjp4"}
+  {:path "raw/grapher/2026-11-21/electricity-prod-source-stacked.metadata.json"
+   :bytes 15666
+   :sha256 "6bb23e9c7f62457f04fe2e579858a3fa5ad3a24ccbd09c6eb5f2acc4df958407"
+   :cid "bafkreidlwi7jy73civ7qj7rok6mfri72llj2etgl2cog5npsvtcn7fmea4"}
+  {:path "raw/grapher/electricity-prod-source-stacked.csv"
+   :bytes 386654
+   :sha256 "80dffb079603b05e4095b48c0ba0d17d93f1f87865a2fb228ab1d4b6b1102824"
+   :cid "bafkreiea375qpfqdwbpebfnurqf2bul5spy7q6dful5sfcvr2s3lcebieq"}
+  {:path "raw/grapher/electricity-prod-source-stacked.metadata.json"
+   :bytes 11164
+   :sha256 "eb74ccc2d150ba43cd67d7abce5b38f5555949189aea7ae3a83da0b347b1a215"
+   :cid "bafkreihlotgmfukqxjb42z6xvphfwohvkvmusge25j5ohkb5uczupmnccu"}
+  {:path "raw/source-catalog.edn"
+   :bytes 1665
+   :sha256 "c2355b1a86f5791c87414fab51c19ad872a139990ee648c2acc374473834f36c"
+   :cid "bafkreigcgvnrvbxvpeoioqkpvni4dgwyokqttgio4zemflgdordtqnhtnq"}]}
