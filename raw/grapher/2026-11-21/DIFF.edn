@@ -1,0 +1,115 @@
+{:diff/of
+ {:old "raw/grapher/electricity-prod-source-stacked.csv"
+  :old-sha256 "80dffb079603b05e4095b48c0ba0d17d93f1f87865a2fb228ab1d4b6b1102824"
+  :new "raw/grapher/2026-11-21/electricity-prod-source-stacked.csv"
+  :new-sha256 "3c1b33823486dfcb8f661ec3f64bb64a741ff460620f0efbb55545ed34fea97f"}
+
+ ;; PROMINENT: the CSV header changed. Same 12 column names, but Gas and Oil
+ ;; swapped positions (old index 9,10 = Oil,Gas; new index 9,10 = Gas,Oil).
+ ;; No column was renamed, added or removed, but any reader using column
+ ;; POSITION (rather than name) will silently swap gas and oil values.
+ ;; The energy projection reads columns by name and is unaffected by the
+ ;; reorder itself; the value-level differences below are computed by name.
+ :header-warning "COLUMN ORDER CHANGED: old [... Nuclear Oil Gas Coal], new [... Nuclear Gas Oil Coal]. Same name set, no renames/adds/removals. Positional readers swap gas and oil."
+
+ :header
+ {:old ["Entity" "Code" "Year" "Other renewables" "Bioenergy" "Solar" "Wind"
+        "Hydropower" "Nuclear" "Oil" "Gas" "Coal"]
+  :new ["Entity" "Code" "Year" "Other renewables" "Bioenergy" "Solar" "Wind"
+        "Hydropower" "Nuclear" "Gas" "Oil" "Coal"]
+  :identical? false
+  :same-column-set? true
+  :renamed-added-or-removed-columns "none: identical name set, only Gas/Oil order swapped"}
+
+ :rows {:old 6879 :new 10582}
+ :bytes {:old-csv 386654 :new-csv 544028
+         :old-metadata 11164 :new-metadata 15666}
+
+ ;; Keys are [Entity Year]. Compared by column NAME, not position.
+ :keys {:only-in-old-count 40
+        :only-in-new-count 3743
+        :in-both-count 6839
+        :differing-among-both-count 789
+        :differing-among-both-positional-naive-count 6549
+        :positional-note "naive positional comparison reports 6549 differing rows, inflated by the Gas/Oil column swap (every row where gas != oil flips). 789 is the by-name count."}
+
+ :only-in-old
+ {:count 40
+  :note "all 40 keys are one aggregate entity present in every old year 1985-2024 and absent from the new file"
+  :examples
+  [["Non-OECD (EI)" "1985"] ["Non-OECD (EI)" "1986"] ["Non-OECD (EI)" "1987"]
+   ["Non-OECD (EI)" "1988"] ["Non-OECD (EI)" "1989"] ["Non-OECD (EI)" "1990"]
+   ["Non-OECD (EI)" "1991"] ["Non-OECD (EI)" "1992"] ["Non-OECD (EI)" "1993"]
+   ["Non-OECD (EI)" "1994"] ["Non-OECD (EI)" "1995"] ["Non-OECD (EI)" "1996"]
+   ["Non-OECD (EI)" "1997"] ["Non-OECD (EI)" "1998"] ["Non-OECD (EI)" "1999"]
+   ["Non-OECD (EI)" "2000"] ["Non-OECD (EI)" "2001"] ["Non-OECD (EI)" "2002"]
+   ["Non-OECD (EI)" "2003"] ["Non-OECD (EI)" "2004"]]}
+
+ :only-in-new
+ {:count 3743
+  :entities-count 136
+  :pre-1985-count 2371
+  :from-1985-count 1372
+  :note "mostly a back-extension to 1900 (2371 keys with year < 1985); 1372 keys in 1985-2025, including 63 new 2025 rows and added aggregates (e.g. Africa, Europe, OECD (EI)) across 1985-2025"
+  :examples
+  [["Africa" "1965"] ["Africa" "1966"] ["Africa" "1967"] ["Africa" "1968"]
+   ["Africa" "1969"] ["Africa" "1970"] ["Africa" "1971"] ["Africa" "1972"]
+   ["Africa" "1973"] ["Africa" "1974"] ["Africa" "1975"] ["Africa" "1976"]
+   ["Africa" "1977"] ["Africa" "1978"] ["Africa" "1979"] ["Africa" "1980"]
+   ["Africa" "1981"] ["Africa" "1982"] ["Africa" "1983"] ["Africa" "1984"]]}
+
+ :differing-among-both
+ {:count 789
+  :entities-count 58
+  :year-range ["1985" "2024"]
+  :code-field-differences 0
+  :per-column-difference-counts
+  {"Other renewables" 642 "Wind" 295 "Solar" 219 "Hydropower" 177
+   "Gas" 155 "Coal" 154 "Oil" 256 "Nuclear" 65 "Bioenergy" 60}
+  :note "e.g. Africa 1985-1999 Other renewables revised from 0 to small positive values"
+  :examples
+  [["Africa" "1985"] ["Africa" "1986"] ["Africa" "1987"] ["Africa" "1988"]
+   ["Africa" "1989"] ["Africa" "1990"] ["Africa" "1991"] ["Africa" "1992"]
+   ["Africa" "1993"] ["Africa" "1994"] ["Africa" "1995"] ["Africa" "1996"]
+   ["Africa" "1997"] ["Africa" "1998"] ["Africa" "1999"] ["Africa (EI)" "1985"]
+   ["Africa (EI)" "1986"] ["Africa (EI)" "1987"] ["Africa (EI)" "1988"]
+   ["Africa (EI)" "1989"]]}
+
+ :latest-year {:old "2025" :new "2025"}
+ :year-span {:old ["1985" "2025"] :new ["1900" "2025"]}
+
+ ;; Licence/source terms, recorded verbatim, not interpreted. Neither metadata
+ ;; document carries a licence field; :license-note in the catalog is unchanged.
+ :licence-and-source-terms
+ {:old-chart
+  {:title "Electricity production by source"
+   :subtitle "Measured in terawatt-hours."
+   :note "\"Other renewables\" include geothermal, wave, and tidal."
+   :citation "Ember (2026); Energy Institute - Statistical Review of World Energy (2025)"
+   :originalChartUrl "https://ourworldindata.org/grapher/electricity-prod-source-stacked"
+   :selection ["World"]
+   :dateDownloaded "2026-07-10"}
+  :new-chart
+  {:title "Electricity generation by source"
+   :subtitle "Measured in terawatt-hours."
+   :note "Other renewables include geothermal, wave, and tidal; bioenergy may be included prior to 2000 due to limited data availability."
+   :citation "Ember (2026) and other sources"
+   :originalChartUrl "https://ourworldindata.org/grapher/electricity-mix?frequency=annual&metric=by_source&source=total"
+   :selection ["World"]
+   :activeFilters {:source "total" :metric "by_source" :frequency "annual"}
+   :dateDownloaded "2026-11-21"}
+  :licence-field-in-either-metadata-document "none found in either document"
+  :catalog-license-note-unchanged true}
+
+ :retrieval
+ {:old-url "https://ourworldindata.org/grapher/electricity-prod-source-stacked.csv"
+  :observed-2026-11-21 "HTTP 301 to /grapher/electricity-mix.csv?frequency=annual&metric=by_source&source=total (same host, followed)"
+  :effective-csv-url "https://ourworldindata.org/grapher/electricity-mix.csv?frequency=annual&metric=by_source&source=total"
+  :effective-metadata-url "https://ourworldindata.org/grapher/electricity-mix.metadata.json?frequency=annual&metric=by_source&source=total"
+  :note "slug electricity-prod-source-stacked now redirects to the electricity-mix grapher with by_source/total filters; files saved unmodified, no transform/sort/filter/re-encode"}
+
+ :method
+ {:row-counts "csv-parsed data rows excluding the header line (.agent-output/diff-csv.py)"
+  :key-sets "keys are [Entity Year]; set differences over parsed rows"
+  :value-comparison "compared by column NAME (dict lookup), so the Gas/Oil reorder does not count as a value change; Code field compared separately"
+  :hashes "sha256sum over the exact downloaded bytes"}}
